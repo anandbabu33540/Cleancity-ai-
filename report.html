@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Report Waste - CleanCity-AI</title>
+    
+    <!-- Fonts & Icons -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <link rel="stylesheet" href="styles.css">
+
+    <style>
+        :root {
+            --primary: #0a9560;
+            --primary-hover: #087a4e;
+            --bg-color: #f4f9f6;
+            --text-dark: #111827;
+            --text-light: #4b5563;
+        }
+
+        body { font-family: 'Inter', sans-serif; margin: 0; padding: 0; background: var(--bg-color); color: var(--text-dark); }
+
+        /* Modern Responsive Header (Same as Home Page) */
+        header { background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px); padding: 15px 5%; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 1000; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
+        .logo { display: flex; align-items: center; gap: 10px; font-weight: 800; font-size: 1.25rem; color: var(--primary); letter-spacing: -0.5px; }
+        .nav-links { list-style: none; display: flex; gap: 20px; padding: 0; margin: 0; }
+        .nav-links a { text-decoration: none; color: var(--text-light); font-weight: 600; font-size: 0.95rem; transition: 0.2s; }
+        .nav-links a:hover { color: var(--primary); }
+        .mobile-menu { display: none; background: none; border: none; cursor: pointer; color: var(--text-dark); padding: 5px; }
+
+        /* Report Form Styling */
+        main { padding: 40px 5%; display: flex; justify-content: center; }
+        .report-container { background: white; width: 100%; max-width: 600px; padding: 40px; border-radius: 16px; box-shadow: 0 10px 30px rgba(0,0,0,0.04); border: 1px solid #f3f4f6; box-sizing: border-box; }
+        
+        .report-container h2 { margin-top: 0; font-size: 1.8rem; font-weight: 800; letter-spacing: -0.5px; margin-bottom: 25px; text-align: center;}
+        
+        /* Upload Area */
+        .upload-box { border: 2px dashed #cbd5e1; padding: 40px 20px; text-align: center; border-radius: 12px; background: #f8fafc; transition: all 0.3s ease; margin-bottom: 20px; }
+        .upload-box:hover { border-color: var(--primary); background: #f0fdf4; }
+        #uploadPlaceholder { color: var(--text-light); font-weight: 500; font-size: 1rem; margin-bottom: 15px; display: flex; flex-direction: column; align-items: center; gap: 10px; }
+        input[type="file"] { max-width: 100%; font-size: 0.9rem; }
+        
+        #preview { width: 100%; max-height: 300px; object-fit: cover; border-radius: 8px; margin-top: 15px; display: none; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+        #preview.show { display: block; }
+
+        /* Inputs & Buttons */
+        .form-group { margin-bottom: 20px; text-align: left; }
+        .form-group label { display: block; font-weight: 600; margin-bottom: 8px; font-size: 0.95rem; }
+        input[type="text"] { width: 100%; padding: 14px 15px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 1rem; font-family: inherit; box-sizing: border-box; transition: 0.2s; }
+        input[type="text"]:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px rgba(10, 149, 96, 0.15); }
+        
+        .btn { width: 100%; padding: 15px; border: none; border-radius: 8px; font-size: 1rem; font-weight: 600; cursor: pointer; transition: 0.3s; display: flex; justify-content: center; align-items: center; gap: 10px; }
+        .btn-analyze { background: #111827; color: white; margin-bottom: 10px; }
+        .btn-analyze:hover { background: #1f2937; }
+        .btn-submit { background: var(--primary); color: white; margin-top: 10px; }
+        .btn-submit:hover { background: var(--primary-hover); }
+        .btn:disabled { background: #94a3b8; cursor: not-allowed; }
+
+        /* Utility classes used by JS */
+        .hidden { display: none !important; }
+        #analysisEmpty { text-align: center; color: var(--text-light); font-size: 0.9rem; margin-top: 10px; }
+        #submitMessage { margin-top: 15px; padding: 15px; background: #f0fdf4; color: #166534; border: 1px solid #bbf7d0; border-radius: 8px; font-weight: 500; text-align: center; }
+        
+        /* Mobile fixes */
+        @media (max-width: 768px) {
+            .nav-links { display: none; }
+            .mobile-menu { display: block; }
+            .report-container { padding: 25px 20px; }
+            .report-container h2 { font-size: 1.5rem; }
+            main { padding: 20px 5%; }
+        }
+    </style>
+</head>
+<body>
+    
+    <!-- Mobile Responsive Header -->
+    <header>
+        <div class="logo">
+            <img src="logo.svg" alt="Logo" width="28" height="28" onerror="this.src='https://via.placeholder.com/28/0a9560/fff?text=CC';"> 
+            CleanCity-AI
+        </div>
+        <ul class="nav-links">
+            <li><a href="index.html">Home</a></li>
+            <li><a href="report.html">Report Waste</a></li>
+            <li><a href="hotspots.html">Hotspots</a></li>
+            <li><a href="map.html">India Map</a></li>
+            <li><a href="analytics.html">Insights</a></li>
+            <li><a href="dashboard.html">Admin Console</a></li>
+        </ul>
+        <button class="mobile-menu"><i data-lucide="menu"></i></button>
+    </header>
+
+    <main>
+        <!-- Modern Form Container -->
+        <div class="report-container">
+            <h2>Report a Waste Hotspot</h2>
+            
+            <div class="upload-box">
+                <div id="uploadPlaceholder">
+                    <i data-lucide="image-plus" style="width: 40px; height: 40px; color: #94a3b8;"></i>
+                    <span>Tap here to upload a photo for AI analysis</span>
+                </div>
+                <input type="file" id="wasteImage" accept="image/*">
+                <img id="preview" alt="Image Preview">
+            </div>
+            
+            <button id="analyzeBtn" class="btn btn-analyze">
+                <i data-lucide="scan-line"></i> Run AI Analysis
+            </button>
+            <div id="analysisEmpty">Upload an image and run analysis to see AI results.</div>
+            
+            <!-- Result container (JS will fill this) -->
+            <div id="analysisResult" class="hidden"></div>
+            
+            <hr style="border:0; height:1px; background:#e2e8f0; margin: 25px 0;">
+            
+            <div class="form-group">
+                <label>Location Details:</label>
+                <input type="text" id="locationInput" placeholder="e.g., Ward 17, Aliganj Metro Gate 2">
+            </div>
+            
+            <button id="submitReport" class="btn btn-submit" disabled>
+                <i data-lucide="send"></i> Submit to Command Center
+            </button>
+            
+            <div id="submitMessage" class="hidden"></div>
+        </div>
+    </main>
+
+    <!-- Required External JavaScript Libraries -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    
+    <!-- Link to your logic file -->
+    <script src="app.js"></script>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', () => { 
+            if(typeof initReport === 'function') initReport(); 
+            lucide.createIcons();
+        });
+    </script>
+</body>
+</html>
