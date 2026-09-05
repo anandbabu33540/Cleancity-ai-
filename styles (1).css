@@ -1,0 +1,22 @@
+/* Poori website ka background aur text color */
+body {
+    background-color: #f7faf8; /* Halka sa green/grey background */
+    color: #333333; /* Dark grey text jo padhne me aasan ho */
+    font-family: Arial, sans-serif;
+}
+
+/* Main Headings ka color */
+h1, h2, h3 {
+    color: #0a9560; /* Apke project ka theme Green color */
+}
+
+/* Links (jaise 'Report a waste spot') ka color */
+a {
+    color: #14abc2; /* Cyan/Blue color */
+    text-decoration: none;
+    font-weight: bold;
+}
+
+a:hover {
+    color: #0a9560;
+}
