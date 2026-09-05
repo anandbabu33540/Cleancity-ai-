@@ -1,0 +1,246 @@
+    <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CleanCity-AI - Intelligent Urban Waste Management</title>
+
+    <!-- Map (Leaflet) CSS Link -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+
+    <style>
+        :root {
+            --primary: #0a9560;
+            --primary-hover: #087a4e;
+            --bg-color: #f4f9f6;
+            --text-dark: #111827;
+            --text-light: #4b5563;
+            --card-bg: #ffffff;
+        }
+        html { scroll-behavior: smooth; }
+        body { font-family: 'Inter', sans-serif; margin: 0; padding: 0; color: var(--text-dark); background-color: var(--bg-color); line-height: 1.6; }
+
+        /* Ticker */
+        .scrolling-ticker { background: #111827; color: #48d49a; padding: 10px 0; overflow: hidden; white-space: nowrap; font-size: 0.9rem; font-weight: 600; display: flex; align-items: center; }
+        .ticker-content { display: inline-block; padding-left: 100%; animation: scrollTicker 25s linear infinite; }
+        .ticker-content span { margin-right: 50px; }
+        @keyframes scrollTicker { 0% { transform: translateX(0); } 100% { transform: translateX(-100%); } }
+
+        /* Header */
+        header { background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px); padding: 15px 5%; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 1000; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
+        .logo { display: flex; align-items: center; gap: 10px; font-weight: 800; font-size: 1.25rem; color: var(--primary); letter-spacing: -0.5px; }
+        .nav-links { list-style: none; display: flex; gap: 20px; padding: 0; margin: 0; }
+        .nav-links a { text-decoration: none; color: var(--text-light); font-weight: 600; font-size: 0.95rem; transition: color 0.2s ease; }
+        .nav-links a:hover { color: var(--primary); }
+        .mobile-menu { display: none; background: none; border: none; cursor: pointer; color: var(--text-dark); padding: 5px; }
+
+        main { padding: 40px 5%; max-width: 1100px; margin: auto; }
+        
+        /* Hero */
+        .hero { min-height: 75vh; display: flex; flex-direction: column; justify-content: center; position: relative; }
+        .badge { display: inline-block; padding: 6px 14px; background: #e1f0e8; color: var(--primary); font-size: 0.75rem; font-weight: 800; border-radius: 50px; letter-spacing: 1px; margin-bottom: 20px; width: max-content; }
+        h1 { font-size: 3.5rem; font-weight: 800; line-height: 1.1; margin: 0 0 20px 0; letter-spacing: -1px; }
+        p { font-size: 1.15rem; color: var(--text-light); max-width: 650px; margin-bottom: 30px; }
+        
+        .btn-group { display: flex; gap: 15px; flex-wrap: wrap; margin-bottom: 40px; }
+        .btn { padding: 14px 28px; text-decoration: none; border-radius: 8px; font-weight: 600; font-size: 1rem; text-align: center; transition: all 0.3s ease; }
+        .btn-primary { background: var(--primary); color: white; box-shadow: 0 4px 6px rgba(10, 149, 96, 0.2); }
+        .btn-primary:hover { background: var(--primary-hover); transform: translateY(-2px); }
+        .btn-secondary { background: white; color: var(--text-dark); border: 1px solid #d1d5db; }
+        .btn-secondary:hover { background: #f3f4f6; }
+        .feature-tags { display: flex; flex-wrap: wrap; gap: 20px; font-size: 0.9rem; color: var(--text-light); font-weight: 600; }
+        .feature-tags span { display: flex; align-items: center; gap: 6px; }
+        .scroll-indicator { margin-top: 40px; display: inline-flex; align-items: center; gap: 8px; color: var(--text-light); font-weight: 600; text-decoration: none; font-size: 0.9rem; animation: bounce 2s infinite; }
+        .scroll-indicator:hover { color: var(--primary); }
+        @keyframes bounce { 0%, 20%, 50%, 80%, 100% { transform: translateY(0); } 40% { transform: translateY(-10px); } 60% { transform: translateY(-5px); } }
+
+        /* Pulse Section */
+        .pulse-section { margin-top: 60px; background: var(--card-bg); padding: 35px; border-radius: 16px; box-shadow: 0 10px 25px rgba(0,0,0,0.03); border: 1px solid #f3f4f6; }
+        .pulse-section h2 { margin-top: 0; margin-bottom: 25px; font-size: 1.5rem; font-weight: 800;}
+        .stats { display: flex; gap: 20px; margin-bottom: 30px; }
+        .stat-item { background: var(--bg-color); padding: 20px; border-radius: 12px; flex: 1; text-align: center; border: 1px solid #e5e7eb;}
+        .stat-item h3 { margin: 0; font-size: 2.5rem; font-weight: 800; line-height: 1; }
+        .stat-item p { margin: 10px 0 0 0; font-size: 0.9rem; color: var(--text-light); font-weight: 600; }
+        .map-chart-container { display: flex; gap: 25px; align-items: stretch; }
+        .map-box, .chart-box { flex: 1; height: 350px; border-radius: 12px; overflow: hidden; border: 1px solid #e5e7eb; background: #fff;}
+
+        /* How It Works Grid */
+        .how-it-works { margin-top: 100px; padding-bottom: 60px; text-align: center; }
+        .steps-grid { display: flex; gap: 30px; margin-top: 40px; }
+        .step-card { background: white; padding: 30px 20px; border-radius: 12px; flex: 1; border: 1px solid #e5e7eb; box-shadow: 0 4px 6px rgba(0,0,0,0.02); transition: 0.3s; }
+        .step-card:hover { transform: translateY(-5px); box-shadow: 0 10px 20px rgba(0,0,0,0.05); }
+        .step-icon { width: 60px; height: 60px; background: #e1f0e8; color: var(--primary); border-radius: 50%; display: flex; justify-content: center; align-items: center; margin: 0 auto 20px auto; }
+        .step-card h3 { margin: 0 0 10px 0; font-size: 1.2rem; }
+        .step-card p { font-size: 0.95rem; color: var(--text-light); margin: 0; }
+
+        /* Footer */
+        footer { background: #111827; color: #9ca3af; padding: 40px 5%; text-align: center; font-size: 0.9rem; }
+        .footer-logo { color: white; font-weight: 800; font-size: 1.2rem; display: flex; align-items: center; justify-content: center; gap: 10px; margin-bottom: 15px; }
+
+        /* Mobile Adjustments */
+        @media (max-width: 768px) {
+            h1 { font-size: 2.4rem; }
+            .nav-links { display: none; }
+            .mobile-menu { display: block; }
+            .btn-group { flex-direction: column; width: 100%; }
+            .btn { width: 100%; box-sizing: border-box; }
+            .stats { flex-direction: column; gap: 15px; }
+            .map-chart-container { flex-direction: column; }
+            .map-box, .chart-box { width: 100%; height: 280px; }
+            .steps-grid { flex-direction: column; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Live Scrolling Alert Ticker -->
+    <div class="scrolling-ticker">
+        <div class="ticker-content">
+            <span>🚨 Critical Alert: High volume waste detected at Aliganj Metro Gate 2</span>
+            <span>✅ Status Update: Ward 21 route marked dispatched</span>
+            <span>⚠️ High Priority: Overflowing bin at Hazratganj Market Lane</span>
+            <span>📍 System: Live monitoring active across 34 wards</span>
+        </div>
+    </div>
+
+    <!-- Header & Navigation -->
+    <header>
+        <div class="logo">
+            <img src="logo.svg" alt="Logo" width="28" height="28" onerror="this.src='https://via.placeholder.com/28/0a9560/fff?text=CC';">
+            CleanCity-AI
+        </div>
+        
+        <!-- Yahan Par 'map.html' ka link add kiya gaya hai -->
+        <ul class="nav-links">
+            <li><a href="index.html">Home</a></li>
+            <li><a href="report.html">Report Waste</a></li>
+            <li><a href="hotspots.html">Hotspots</a></li>
+            <li><a href="map.html">India Map</a></li>
+            <li><a href="analytics.html">Insights</a></li>
+            <li><a href="dashboard.html">Admin Console</a></li>
+        </ul>
+        
+        <button class="mobile-menu"><i data-lucide="menu"></i></button>
+    </header>
+
+    <main>
+        <!-- Hero Section -->
+        <section class="hero">
+            <span class="badge">SMART AND CLEANCITY-AI</span>
+            <h1>Cleaner cities,<br>powered by intelligence.</h1>
+            <p>CleanCity-AI turns citizen observations into actionable urban waste intelligence—detecting waste, scoring severity, surfacing hotspots and helping teams prioritize pickups.</p>
+            
+            <div class="btn-group">
+                <a href="report.html" class="btn btn-primary">Report a waste spot</a>
+                <a href="dashboard.html" class="btn btn-secondary">Explore command center</a>
+            </div>
+
+            <div class="feature-tags">
+                <span><i data-lucide="cpu"></i> AI-assisted triage</span>
+                <span><i data-lucide="map"></i> Hotspot intelligence</span>
+                <span><i data-lucide="zap"></i> Demo-ready & static</span>
+            </div>
+
+            <div>
+                <a href="#live-data" class="scroll-indicator">
+                    Scroll to View Live Data <i data-lucide="arrow-down-circle"></i>
+                </a>
+            </div>
+        </section>
+
+        <!-- Live Demo City Pulse -->
+        <section id="live-data" class="pulse-section">
+            <h2>Live demo city pulse</h2>
+            <div class="stats">
+                <div class="stat-item">
+                    <h3 style="color: #0a9560;">27</h3>
+                    <p>priority reports</p>
+                </div>
+                <div class="stat-item">
+                    <h3 style="color: #de04e5;">12</h3>
+                    <p>critical reports</p>
+                </div>
+                <div class="stat-item">
+                    <h3 style="color: #e78b33;">15</h3>
+                    <p>high reports</p>
+                </div>
+            </div>
+            <div class="map-chart-container">
+                <div class="map-box" id="homeMap" style="z-index: 1;"></div>
+                <div class="chart-box" style="padding: 10px; box-sizing: border-box;">
+                    <canvas id="sparkChart"></canvas>
+                </div>
+            </div>
+        </section>
+
+        <!-- How It Works Grid -->
+        <section class="how-it-works">
+            <span style="font-size: 0.85rem; font-weight: 800; color: #0a9560; letter-spacing: 1.5px; text-transform: uppercase;">HOW IT WORKS</span>
+            <h2 style="font-size: 2.2rem; margin-top: 10px; margin-bottom: 15px;">From photo to pickup priority.</h2>
+            <p style="margin: auto; max-width: 600px;">One seamless workflow for citizens, field teams, and municipal decision-makers.</p>
+            
+            <div class="steps-grid">
+                <div class="step-card">
+                    <div class="step-icon"><i data-lucide="camera" style="width:30px; height:30px;"></i></div>
+                    <h3>1. Citizen Reports</h3>
+                    <p>Citizens capture and upload images of unmanaged waste or overflowing bins in their locality.</p>
+                </div>
+                <div class="step-card">
+                    <div class="step-icon"><i data-lucide="brain-circuit" style="width:30px; height:30px;"></i></div>
+                    <h3>2. AI Triage</h3>
+                    <p>Our system analyzes the image to estimate waste volume, type, and severity automatically.</p>
+                </div>
+                <div class="step-card">
+                    <div class="step-icon"><i data-lucide="truck" style="width:30px; height:30px;"></i></div>
+                    <h3>3. Action Taken</h3>
+                    <p>Hotspots are mapped in real-time, helping municipal trucks optimize routes and clear waste faster.</p>
+                </div>
+            </div>
+        </section>
+    </main>
+    
+    <     <!-- Footer -->
+    <footer>
+        <div class="footer-logo">
+            <i data-lucide="leaf"></i> CleanCity-AI
+        </div>
+        <p>A smart initiative for a cleaner, greener tomorrow.</p>
+        
+        <!-- Developer / Creator Info Section with Real Logos -->
+        <div style="margin-top: 25px; display: flex; justify-content: center; gap: 30px; flex-wrap: wrap;">
+            
+            <!-- GitHub Link with Real Logo -->
+            <a href="https://github.com/anandbabu33540" target="_blank" style="color: #ffffff; text-decoration: none; font-weight: 600; display: flex; align-items: center; gap: 8px; transition: 0.3s;">
+                <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/github/github-original.svg" alt="GitHub Logo" width="24" height="24" style="filter: invert(1);"> 
+                @anandbabu33540
+            </a>
+            
+            <!-- LinkedIn Link with Real Colorful Logo -->
+            <a href="https://www.linkedin.com/in/anand-babu-24bb4a322?utm_source=share_via&utm_content=profile&utm_medium=member_android" target="_blank" style="color: #ffffff; text-decoration: none; font-weight: 600; display: flex; align-items: center; gap: 8px; transition: 0.3s;">
+                <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/linkedin/linkedin-original.svg" alt="LinkedIn Logo" width="24" height="24"> 
+                Let's Connect
+            </a>
+            
+        </div>
+
+        <!-- Updated Year -->
+        <p style="margin-top: 30px; font-size: 0.85rem; opacity: 0.6;">© 2026 CleanCity-AI Project. Developed by Anand Babu.</p>
+    </footer>
+
+
+    <!-- Required External JavaScript Libraries -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="app.js"></script>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            if(typeof initHome === 'function') initHome();
+            lucide.createIcons(); // Icons render karne ke liye
+        });
+    </script>
+</body>
+</html>
