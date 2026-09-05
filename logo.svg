@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 72 72" role="img" aria-label="CleanCity AI logo">
+  <defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#0ea765"/><stop offset="1" stop-color="#1bb7d9"/></linearGradient></defs>
+  <rect width="72" height="72" rx="20" fill="#ecfbf5"/>
+  <path d="M18 48h36" stroke="#0a7f4f" stroke-width="4" stroke-linecap="round"/>
+  <path d="M22 45V27l7-6 7 6v18M37 45V22l7-5 6 5v23" fill="none" stroke="url(#g)" stroke-width="4" stroke-linejoin="round"/>
+  <path d="M16 40c8 0 11-4 15-11 5 10 12 12 25 12" fill="none" stroke="#19aec8" stroke-width="3" stroke-linecap="round"/>
+  <circle cx="54" cy="18" r="4" fill="#12a974"/>
+</svg>
