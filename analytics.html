@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Insights - CleanCity-AI</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 0; background: #f7faf8; }
+        header { background: #fff; padding: 15px 5%; display: flex; justify-content: space-between; align-items: center; }
+        .logo { font-weight: bold; color: #0a9560; display: flex; align-items: center; gap: 10px; }
+        .nav-links { list-style: none; display: flex; gap: 20px; margin: 0; padding: 0; }
+        .nav-links a { text-decoration: none; color: #555; }
+        main { padding: 40px 5%; max-width: 1000px; margin: auto; display: flex; flex-direction: column; gap: 20px; }
+        .chart-box { background: white; padding: 20px; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
+        .btn { background: #14abc2; color: white; border: none; padding: 10px 20px; border-radius: 6px; cursor: pointer; font-weight: bold; width: max-content; }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="logo"><img src="logo.svg" alt="Logo" width="30" onerror="this.src='https://via.placeholder.com/30/0a9560/fff?text=CC';"> CleanCity-AI</div>
+        <ul class="nav-links">
+            <li><a href="index.html">Home</a></li>
+            <li><a href="analytics.html">Insights</a></li>
+        </ul>
+    </header>
+
+    <main>
+        <button id="exportBtn" class="btn">Export CSV Report</button>
+
+        <div class="chart-box">
+            <h2>Weekly Reports vs Resolved</h2>
+            <div style="height: 300px;"><canvas id="trendChart"></canvas></div>
+        </div>
+
+        <div class="chart-box">
+            <h2>Waste Categories</h2>
+            <div style="height: 300px;"><canvas id="categoryChart"></canvas></div>
+        </div>
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="app.js"></script>
+    <script>document.addEventListener('DOMContentLoaded', () => { if(typeof initAnalytics === 'function') initAnalytics(); });</script>
+</body>
+</html>
