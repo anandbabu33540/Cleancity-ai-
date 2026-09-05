@@ -16,9 +16,8 @@ function initReport(){
           
     let fileLoaded=false;
     
-    // Aapki Hugging Face API Key yahan lag gayi hai
+    // Aapki Hugging Face API Key
     const API_KEY = "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"; 
-    // Ye ek real Garbage Classification AI Model hai
     const API_URL = "https://api-inference.huggingface.co/models/yangy50/garbage-classification"; 
 
     input.addEventListener('change',()=>{
@@ -37,39 +36,54 @@ function initReport(){
         }
 
         const file = input.files[0];
-        
-        // Button Loading State
         const originalBtnText = analyze.innerHTML;
         analyze.innerHTML = `<i data-lucide="loader" class="spin"></i> Analyzing via Real AI...`;
         analyze.disabled = true;
-        initIcons(); // refresh loading icon
+        initIcons(); 
+
+        // NAYA: Smart Auto-Retry Function
+        const fetchWithRetry = async (retries = 2) => {
+            try {
+                const response = await fetch(API_URL, {
+                    headers: { Authorization: `Bearer ${API_KEY}` },
+                    method: "POST",
+                    body: file,
+                });
+                
+                const apiData = await response.json();
+                
+                // Agar model sleep mode me hai (Loading bata raha hai)
+                if (apiData.error && apiData.estimated_time) {
+                    let waitTime = Math.ceil(apiData.estimated_time); // 20 seconds
+                    analyze.innerHTML = `<i data-lucide="loader" class="spin"></i> AI Waking Up (${waitTime}s)...`;
+                    initIcons();
+                    
+                    // Code apne aap utne second rukega aur phir se try karega
+                    await new Promise(resolve => setTimeout(resolve, (waitTime + 1) * 1000));
+                    return fetchWithRetry(retries - 1);
+                }
+                
+                if (!response.ok) throw new Error("API Error");
+                return apiData;
+            } catch (err) {
+                throw err;
+            }
+        };
 
         try {
-            // REAL API CALL
-            const response = await fetch(API_URL, {
-                headers: { Authorization: `Bearer ${API_KEY}` },
-                method: "POST",
-                body: file,
-            });
-
-            if (!response.ok) throw new Error("API Error: Model might be loading or key is invalid");
-
-            const apiData = await response.json();
+            // Yahan automatic wali function call hogi
+            const apiData = await fetchWithRetry();
             
-            // Hugging Face data deta hai [{label: "plastic", score: 0.95}, ...]
-            // Hum sabse high score (confidence) wala result uthayenge
             const topResult = apiData[0]; 
             const realConfidence = Math.round(topResult.score * 100);
             let wasteLabel = topResult.label.toUpperCase();
             
-            // Model ke label ko apne project ke format me adjust karein
             let severity = realConfidence > 80 ? 'Critical' : realConfidence > 50 ? 'High' : 'Medium';
             let priorityScore = realConfidence > 85 ? (80 + Math.floor(Math.random()*15)) : (50 + Math.floor(Math.random()*30));
             
             empty.classList.add('hidden');
             result.classList.remove('hidden');
             
-            // HTML render for Result
             result.innerHTML=`<div class="ai-result" style="background: #f0fdf4; padding: 20px; border-radius: 12px; border: 1px solid #bbf7d0;">
                 <div class="score-box" style="display:flex; align-items:center; gap: 15px; margin-bottom: 20px;">
                     <div class="score-circle" style="background:#0a9560; color:white; width:60px; height:60px; border-radius:50%; display:flex; justify-content:center; align-items:center; font-size:1.5rem;">
@@ -93,9 +107,8 @@ function initReport(){
             submit.disabled=false;
         } catch (error) {
             console.error(error);
-            alert("AI model load ho raha hai (is process me 10-20 seconds lag sakte hain pehli baar). Kripya thodi der baad wapas button click karein!");
+            alert("AI Server bahut busy hai. Kripya image thodi choti (size me) daalein ya page refresh karke try karein.");
         } finally {
-            // Restore button
             analyze.innerHTML = originalBtnText;
             analyze.disabled = false;
             initIcons();
@@ -119,3 +132,4 @@ function renderActivity(){const el=document.getElementById('activityFeed');if(!e
 function showToast(t){const el=document.getElementById('toast');if(!el)return;el.textContent=t;el.classList.add('show');setTimeout(()=>el.classList.remove('show'),2500)}
 function initMobileMenu(){document.querySelectorAll('.mobile-menu').forEach(b=>b.addEventListener('click',()=>{const n=b.previousElementSibling;if(n){n.style.display=n.style.display==='flex'?'none':'flex';n.style.position='absolute';n.style.top='74px';n.style.left='0';n.style.right='0';n.style.background='rgba(255,255,255,.98)';n.style.padding='20px 5%';n.style.flexDirection='column';n.style.gap='20px';n.style.borderBottom='1px solid #e5ece8';n.style.boxShadow='0 10px 15px rgba(0,0,0,0.05)';}}))}
 document.addEventListener('DOMContentLoaded',()=>{initMobileMenu();initIcons()});
+
