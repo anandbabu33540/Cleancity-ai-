@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>CleanCity-AI | Report Waste</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+        <h2>🌍 CleanCity-AI</h2>
+        <nav>
+            <a href="index.html">Home</a>
+            <a href="dashboard.html">Dashboard</a>
+            <a href="report.html">Report Waste</a>
+            <a href="hotspots.html">Hotspots</a>
+        </nav>
+    </header>
+    <div class="container">
+        <div class="card" style="max-width: 600px; margin: auto;">
+            <h2>Submit a Waste Report</h2>
+            <form id="reportForm">
+                <label>Description</label>
+                <textarea id="desc" rows="3" required placeholder="Describe the waste issue..."></textarea>
+                
+                <label>Location (Latitude, Longitude)</label>
+                <input type="text" id="latlng" required placeholder="e.g., 26.8467, 80.9462 (Lucknow)">
+                
+                <label>Upload Image</label>
+                <input type="file" id="imageFile" accept="image/*" required>
+                
+                <button type="submit">Submit & Run AI Analysis</button>
+            </form>
+            <p id="statusMsg" style="color: green; font-weight: bold; margin-top: 1rem;"></p>
+        </div>
+    </div>
+    <script src="app.js"></script>
+</body>
+</html>
