@@ -2,8 +2,93 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <!-- Mobile view ke liye zaruri tag -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CleanCity-AI | Home</title>
     <link rel="stylesheet" href="styles.css">
+    
+    <!-- Index page specific styles for a premium look -->
+    <style>
+        .hero {
+            text-align: center;
+            padding: 4rem 1.5rem;
+            background: linear-gradient(135deg, #e6fffa 0%, #f0fdf4 100%);
+            border-radius: 16px;
+            margin-bottom: 3rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+            border: 1px solid #d1fae5;
+        }
+        .hero h1 {
+            font-size: 2.8rem;
+            color: #047857;
+            margin-bottom: 1rem;
+            line-height: 1.2;
+        }
+        .hero p {
+            font-size: 1.2rem;
+            color: #4b5563;
+            margin-bottom: 2rem;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        .hero-btn {
+            display: inline-block;
+            background-color: #059669;
+            color: white;
+            padding: 1rem 2.5rem;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 1.1rem;
+            transition: transform 0.2s, box-shadow 0.2s;
+            box-shadow: 0 4px 6px rgba(5, 150, 105, 0.3);
+        }
+        .hero-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 15px rgba(5, 150, 105, 0.4);
+            background-color: #047857;
+        }
+        .features-grid {
+            display: grid;
+            /* Auto-responsive: mobile par 1 column, PC par 3 columns */
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-top: 1.5rem;
+        }
+        .feature-card {
+            background: white;
+            padding: 2rem;
+            border-radius: 12px;
+            text-align: center;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            border: 1px solid #e5e7eb;
+            transition: transform 0.3s;
+        }
+        .feature-card:hover {
+            transform: translateY(-5px);
+            border-color: #10b981;
+        }
+        .feature-icon {
+            font-size: 3.5rem;
+            margin-bottom: 1rem;
+        }
+        .feature-card h3 {
+            color: #1f2937;
+            margin-bottom: 0.5rem;
+            font-size: 1.3rem;
+        }
+        .feature-card p {
+            color: #6b7280;
+            font-size: 0.95rem;
+        }
+        
+        /* Mobile View Adjustments */
+        @media (max-width: 600px) {
+            .hero h1 { font-size: 2rem; }
+            .hero { padding: 3rem 1rem; }
+        }
+    </style>
 </head>
 <body>
     <header>
@@ -11,17 +96,41 @@
         <nav>
             <a href="index.html">Home</a>
             <a href="dashboard.html">Dashboard</a>
-            <a href="report.html">Report Waste</a>
+            <a href="report.html">Report</a>
             <a href="hotspots.html">Hotspots</a>
         </nav>
     </header>
+
     <div class="container">
-        <div class="card" style="text-align: center; padding: 4rem 2rem;">
-            <h1>Welcome to CleanCity-AI</h1>
-            <p style="margin: 1rem 0; font-size: 1.2rem;">AI-Powered Urban Waste Intelligence Platform</p>
-            <a href="report.html"><button style="width: auto; padding: 1rem 2rem;">Report Waste Now</button></a>
+        <!-- Hero Section -->
+        <div class="hero">
+            <h1>Smart Waste Management for a Cleaner Future</h1>
+            <p>Empowering citizens and municipalities with AI-driven insights to detect, report, and resolve urban waste efficiently.</p>
+            <a href="report.html" class="hero-btn">📸 Report Waste Now</a>
+        </div>
+
+        <h2 style="text-align: center; color: #374151; margin-bottom: 1rem; font-size: 2rem;">Why CleanCity-AI?</h2>
+        
+        <!-- Features Section -->
+        <div class="features-grid">
+            <div class="feature-card">
+                <div class="feature-icon">🤖</div>
+                <h3>AI Classification</h3>
+                <p>Powered by EfficientNet-B0 to instantly identify waste types (Plastic, E-Waste, Organic) and assign priority.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">📍</div>
+                <h3>Geotagged Hotspots</h3>
+                <p>Automatically maps reported waste to calculate severity hotspots across different city wards and zones.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">📊</div>
+                <h3>Smart Dashboard</h3>
+                <p>Provides real-time analytics for municipal workers to track pending, resolved, and critical waste issues.</p>
+            </div>
         </div>
     </div>
+
     <script src="app.js"></script>
 </body>
 </html>
