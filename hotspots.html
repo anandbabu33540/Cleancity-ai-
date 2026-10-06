@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>CleanCity-AI | Hotspots</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+        <h2>🌍 CleanCity-AI</h2>
+        <nav>
+            <a href="index.html">Home</a>
+            <a href="dashboard.html">Dashboard</a>
+            <a href="report.html">Report Waste</a>
+            <a href="hotspots.html">Hotspots</a>
+        </nav>
+    </header>
+    <div class="container">
+        <div class="card">
+            <h2>Critical Waste Hotspots</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Ward/Location</th>
+                        <th>Latitude</th>
+                        <th>Longitude</th>
+                        <th>Report Count</th>
+                        <th>Severity</th>
+                    </tr>
+                </thead>
+                <tbody id="hotspotsTable">
+                    <!-- Data will be injected here via app.js -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <script src="app.js"></script>
+    <script>window.onload = fetchHotspots;</script>
+</body>
+</html>
