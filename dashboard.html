@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>CleanCity-AI | Dashboard</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+        <h2>🌍 CleanCity-AI</h2>
+        <nav>
+            <a href="index.html">Home</a>
+            <a href="dashboard.html">Dashboard</a>
+            <a href="report.html">Report Waste</a>
+            <a href="hotspots.html">Hotspots</a>
+        </nav>
+    </header>
+    <div class="container">
+        <h2>City Waste Stats</h2>
+        <div class="grid-3" style="margin-top: 1rem;">
+            <div class="stat-box">
+                <h3 id="total-reports">...</h3>
+                <p>Total Reports</p>
+            </div>
+            <div class="stat-box">
+                <h3 id="pending-reports">...</h3>
+                <p>Pending</p>
+            </div>
+            <div class="stat-box">
+                <h3 id="resolved-reports">...</h3>
+                <p>Resolved</p>
+            </div>
+        </div>
+    </div>
+    <script src="app.js"></script>
+    <script>
+        // Page load hote hi stats fetch karein
+        window.onload = fetchDashboardStats;
+    </script>
+</body>
+</html>
